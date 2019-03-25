@@ -1,0 +1,22 @@
+{
+    "name": "simple-draw-ts",
+    "version": "1.0.0",
+    "description": "Simple Draw TS",
+    "author": "Sereno & JP",
+    "license": "ISC",
+    "@std/esm": "cjs",
+    "main": "script.js",
+    "dependencies": {},
+    "devDependencies": {
+        "@types/node": "^11.11.6",
+        "browserify": "^16.2.2",
+        "npm": "^6.0.1",
+        "opn-cli": "^4.0.0",
+        "ts-node": "^8.0.3",
+        "typescript": "^3.3.3333"
+    },
+    "scripts": {
+        "build": "tsc",
+        "start": "tsc; node build/main.js"
+    }
+}
