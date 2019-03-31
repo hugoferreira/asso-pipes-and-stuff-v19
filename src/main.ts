@@ -1,5 +1,4 @@
 import { readFileSync, fstat } from 'fs'
-import { DH_CHECK_P_NOT_SAFE_PRIME } from 'constants';
 
 interface Filter {
     next(): Message
