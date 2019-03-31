@@ -43,15 +43,15 @@ For those that were not paying attention (or feel lost):
 ![](assets/scenario-1.png)
 
 * Unbounded queue;
-* Publisher sends message a.s.a.p.;
-* Subscriber tries to pull message and blocks (`awaits`) until it has one;
+* Publisher sends messages a.s.a.p.;
+* Subscriber tries to pull messages and blocks (`awaits`) until it has one;
 * *Implicit* subscription (fetch from data structure).
 
 #### Potential problems
 
 * Possible out-of-memory in queue;
 * Publisher produces work even if no subscriber exists (eager);
-* When does the subscriber *consumes* (removes) the message from the queue? Right away? When it finishes the work? What if if fails after removing and before finishing its work?
+* When does the subscriber *consume* (removes) the message from the queue? Right away? When it finishes the work? What if it fails after removing and before finishing its work?
 
 ---
 
@@ -62,7 +62,7 @@ For those that were not paying attention (or feel lost):
 * Unbounded queue and publishes asap (again);
 * Multiple subscribers:
     * They pull messages concurrently;
-    * Each get a different message;
+    * Each gets a different message;
 * *Implicit* subscription (fetch from data structure).
 
 #### Potential problems:
@@ -70,7 +70,7 @@ For those that were not paying attention (or feel lost):
 * Possible out-of-memory in queue (again);
 * Eager producer (again);
 * No guarantees on delivery-order, or load-balancing;
-* Potentially *looses* messages if they are consumed asap;
+* Potentially *loses* messages if they are consumed asap;
 * Potentially *duplicates* messages if they are consumed only after subscriber finishes work;
 
 ---
@@ -86,9 +86,9 @@ For those that were not paying attention (or feel lost):
 
 #### With steroids:
 
-* Understands recepit notification (**ACK**) from subscribers;
+* Understands receipt notification (**ACK**) from subscribers;
 * May use [Heart Beat](https://en.wikipedia.org/wiki/Heartbeat_(computing)), [Timeout](https://en.wikipedia.org/wiki/Timeout_(computing)) and [Circuit breaker](https://martinfowler.com/bliki/CircuitBreaker.html) patterns to deal with delivery failures;
-* Manages messages meta-information, such as marking them as *tentatively consumed*, until it has such guarantees. This avoids messages being lost.
+* Manages message meta-information, such as marking them as *tentatively consumed*, until it has such guarantees (e.g., to avoids losing messages).
 
 #### Potential problems:
 
@@ -117,15 +117,15 @@ For those that were not paying attention (or feel lost):
 
 * Single point of failure ([SPOF](https://en.wikipedia.org/wiki/Single_point_of_failure)) for any combination of publisher/subscriber;
 * Performance bottleneck;
-* Eagerness is **still** a problem. **(To meditate)** Did we really loose the capability to signal backwards?
+* Eagerness is **still** a problem. **(To meditate)** Did we really lost the capability to signal backwards?
 * What happens if there are no subscriptors?
-* What happens to oubound channels if subscriptor dies?
+* What happens to outbound channels if subscriptor dies?
 
 ----
 ### In Praise of Idleness ([Book](https://www.amazon.com/Praise-Idleness-Routledge-Classics-46/dp/0415325064))
 
 * By **eager** we mean that the publisher performs *work* independently from (a) existing subscribers or (b) having them willing to process messages;
-* By **lazy** we mean that the publisher only does the necessary ammount of work to meet the subscriber *needs*.
+* By **lazy** we mean that the publisher only does the necessary amount of work to meet the subscriber *needs*.
 
 ### A simple solution to cope with laziness
 
@@ -134,20 +134,17 @@ For those that were not paying attention (or feel lost):
 * By managing the size of the queue (buffer), one can block the publisher from producing a message.
 * Different buffers allow independent rates of production;
 * Laziness of the publisher is coupled with its ability of *not performing work* if it can't publish messages.
-* But... how does the Broker knows the appropriate buffer size?
-    * Rate of consumption analysis, by timing the outbound queues. What about the initial size? What about (potential) unecessary production until the buffer fills in?
+* But... how does the Broker know the appropriate buffer size?
+    * Rate of consumption analysis, by timing the outbound queues. What about the initial size? What about (potential) unnecessary production until the buffer fills in?
     * Explicit signal from subscribers back to publishers. What should be the *unit of demand*? How does the signal propagate?
 
-### 
-
----
-### Exercises
+## Exercises
 
 Attempt to replicate every scenario described above. If feeling lost, then try to proceed as follows:
 
 1. Implement an `AsyncQueue`, i.e., an asynchronous unlimited [FIFO](https://en.wikipedia.org/wiki/Queue_(abstract_data_type));
 
-1. Implement a `BoundedAsyncQueue`, i.e. an asynchronous bounded FIFO, that block `enqueuing()` when it's full, and blocks `dequeueing()` when it's empty;
+1. Implement a `BoundedAsyncQueue`, i.e. an asynchronous bounded FIFO, that block `enqueuing()` when it's full, and blocks `dequeuing()` when it's empty;
 
 1. Realize that the implementation of an `AsyncSemaphore` would make things easier, by studying the [producer-consumer problem](https://en.wikipedia.org/wiki/Producer–consumer_problem);
 
@@ -161,12 +158,9 @@ Attempt to replicate every scenario described above. If feeling lost, then try t
 
 1. Realize we've now built the basis for explicit pipes. Refactor the project to support them.
 
----
-**Note.** Asynchronous programming is hard for the human brain. Testing it is even harder! You'll make a lot of mistakes... that's normal and part of the learning process.
+> **Note.** Asynchronous programming is hard for the human brain. Testing it is even harder! You'll make a lot of mistakes... that's normal and part of the learning process.
 
----
-
-### General Notes on Event-Driven Architectures
+## General Notes on Pub/Sub Architectures
 
 * **Queues provide a buffer to cope with sudden spikes**. Data messages added to a queue are stored and held to be processed later. As a result, adding messages to the queue is completely decoupled from subscribers wishing to take messages off the queue. So if subscribers cannot keep up, the queue simply grows and the workers are given some breathing room and as much time as they need to catch up.
 
@@ -188,7 +182,7 @@ Attempt to replicate every scenario described above. If feeling lost, then try t
 
 * **Message filtering**. Some systems support filtering data so that a subscriber may only see messages matching some pre-specified criteria of interest;
 
-* **Delivery policies**. Do we always  need to guarantee that a message is delivered *at least once*? What about when we **really** need to guarantee *no more than once*?
+* **Delivery policies**. Do we always need to guarantee that a message is delivered *at least once*? What about when we **really** need to guarantee *no more than once*?
 
 * **Batching policies**. Should messages be delivered immediately? Or should the system wait a bit and try to deliver many messages at once?
 
