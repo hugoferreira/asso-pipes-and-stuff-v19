@@ -45,7 +45,7 @@ For those that were not paying attention (or feel lost):
 * Unbounded queue;
 * Publisher sends messages a.s.a.p.;
 * Subscriber tries to pull messages and blocks (`awaits`) until it has one;
-* *Implicit* subscription (fetch from data structure).
+* *Implicit* subscription (fetch directly from data structure).
 
 #### Potential problems
 
@@ -150,15 +150,21 @@ Attempt to replicate every scenario described above. If feeling lost, then try t
 
 1. **(To meditate)** What should be the semantics of a zero-length queue?
 
-1. Implement the [Observer](https://en.wikipedia.org/wiki/Observer_pattern) on top of the `BoundedAsyncQueue` towards a [publish/subscribe](https://en.wikipedia.org/wiki/Publish–subscribe_pattern) architecture. **Then meditate on:**
+1. Implement the [Observer](https://en.wikipedia.org/wiki/Observer_pattern) pattern on top of the `BoundedAsyncQueue` towards a [publish/subscribe](https://en.wikipedia.org/wiki/Publish–subscribe_pattern) architecture. **Then meditate on:**
 
    * `ObservableBoundedAsyncQueue` via *composition* or *inheritance*?
-   * What's the event? A signal (`hasNext`) or the message?
-   * [Fanout](https://en.wikipedia.org/wiki/Fan-out_(software)) or first-come, first-served?
+   * What's the notification? A *signal* or *the message*?
+   * [Fanout](https://en.wikipedia.org/wiki/Fan-out_(software)) or *first-come, first-served*?
+   * Compare what you've just implemented with the [Observable](http://reactivex.io/documentation/observable.html) pattern, and while you're at it, ponder over the following table:
 
-1. Realize we've now built the basis for explicit pipes. Refactor the project to support them.
+        |          | Single   | Multiple   |
+        |----------|----------|------------|
+        | **Pull** | Function | [Iterator](https://en.wikipedia.org/wiki/Iterator_pattern)   |
+        | **Push** | [Promise](https://en.wikipedia.org/wiki/Futures_and_promises)  | [Observable](http://reactivex.io/documentation/observable.html) |
 
-> **Note.** Asynchronous programming is hard for the human brain. Testing it is even harder! You'll make a lot of mistakes... that's normal and part of the learning process.
+1. Realize you've now built the basis for explicit pipes. Refactor the project to support them.
+
+> **Note.** Asynchronous programming is hard for the human brain. Testing it is even harder! You'll make a lot of mistakes... that's normal and part of the learning process. 
 
 ## General Notes on Pub/Sub Architectures
 
@@ -172,7 +178,7 @@ Attempt to replicate every scenario described above. If feeling lost, then try t
 
 * **Data integrity**. If a worker picks a message off the queue, but does not send an acknowledgement of the message being successfully processed, then after a short period the message will become available on the queue again to be processed by the next available worker. This feature ensures that messages are never lost.
 
-#### As you've observed, there are several options related to the semantics of message passing:
+#### As you've observed (pun intended), there are several options related to the semantics of message passing:
 
 * **Durability**. Messages may be kept in memory, written to disk, or even committed to a DBMS if the need for reliability indicates a more resource-intensive solution;
 
