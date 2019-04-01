@@ -86,7 +86,7 @@ class FileLineReader implements Filter {
     }
 
     async readSingleLine(): Promise<string> {
-        return once(this.lineReader, 'line')
+        return await once(this.lineReader, 'line')
     }
 
     async next(): Promise<Message> {
