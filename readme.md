@@ -1,7 +1,7 @@
 # Info.Sec.C00k3r
 
 > **To develop an application that supports the creation and execution of Information Security Recipes.**
-The base unit of computation in this application is a Task. Tasks are comprised of (1) a set of inputs, (b) a set of outputs, and (c) an inherent behaviour. One can compose tasks by arbitrarily connecting their inputs and outputs to form a Recipe. There's a standard collection of tasks that we can already foresee, but the application should be extensible enough to support new tasks via plugins without altering the base code. Recipes can be saved and reused as tasks in other recipes.
+The base unit of computation in this application is a Task. Tasks are comprised of (a) a set of inputs, (b) a set of outputs, and (c) an inherent behaviour. One can compose tasks by arbitrarily connecting their inputs and outputs to form a Recipe. There's a standard collection of tasks that we can already foresee, but the application should be extensible enough to support new tasks via plugins without altering the base code. Recipes can be saved and reused as tasks in other recipes.
 
 Refer to the class slides for more information.
 
@@ -10,7 +10,7 @@ Refer to the class slides for more information.
 * *Pull* architecture, from the point of view of tasks (tasks *demand* data);
 * Synchronous and Blocking;
 * Eager instead of Lazy (see `FileLineReader`);
-* No orchestrator (`iterate()` is lost in the hyperspace and there's no notion of recipe execution);
+* No orchestrator (`iterate()` is lost in the hyperspace and there's no notion of recipe execution).
 
 End of class challenges (do a PR if you address them):
 
@@ -18,7 +18,7 @@ End of class challenges (do a PR if you address them):
 * Lazify the sources (`FileLineReader` should support files larger than available RAM);
 * Add new filters (some of them were left commented out);
 * Implement `Fork` (send the same output to multiple blocks; what should be its API? And semantics? Fanout? Round-robin?);
-* **(To meditate)** Do we really want/need an `iterate()` ?
+* **(To meditate)** Do we really want/need an `iterate()`?
 
 For those that were not paying attention (or feel lost):
 
@@ -71,7 +71,7 @@ For those that were not paying attention (or feel lost):
 * Eager producer (again);
 * No guarantees on delivery-order, or load-balancing;
 * Potentially *loses* messages if they are consumed asap;
-* Potentially *duplicates* messages if they are consumed only after subscriber finishes work;
+* Potentially *duplicates* messages if they are consumed only after subscriber finishes work.
 
 ---
 
@@ -82,7 +82,7 @@ For those that were not paying attention (or feel lost):
 * Unbounded queue and publishes asap (again);
 * *Ventilator* (or Subscription Manager) knows about the subscribers:
     * [Observer](https://en.wikipedia.org/wiki/Observer_pattern) used to push to subscribers (*Explicit* subscription);
-    * Different specializations of *ventilators* ([Fanout](https://en.wikipedia.org/wiki/Fan-out_(software)), Round-robin...);
+    * Different specializations of *ventilators* ([Fanout](https://en.wikipedia.org/wiki/Fan-out_(software)), Round-robin...).
 
 #### With steroids:
 
@@ -118,8 +118,8 @@ For those that were not paying attention (or feel lost):
 * Single point of failure ([SPOF](https://en.wikipedia.org/wiki/Single_point_of_failure)) for any combination of publisher/subscriber;
 * Performance bottleneck;
 * Eagerness is **still** a problem. **(To meditate)** Did we really lost the capability to signal backwards?
-* What happens if there are no subscriptors?
-* What happens to outbound channels if subscriptor dies?
+* What happens if there are no subscribers?
+* What happens to outbound channels if a subscriber dies?
 
 ----
 ### In Praise of Idleness ([Book](https://www.amazon.com/Praise-Idleness-Routledge-Classics-46/dp/0415325064))
@@ -133,7 +133,7 @@ For those that were not paying attention (or feel lost):
 
 * By managing the size of the queue (buffer), one can block the publisher from producing a message.
 * Different buffers allow independent rates of production;
-* Laziness of the publisher is coupled with its ability of *not performing work* if it can't publish messages.
+* Laziness of the publisher is coupled with its ability of *not performing work* if it can't publish messages;
 * But... how does the Broker know the appropriate buffer size?
     * Rate of consumption analysis, by timing the outbound queues. What about the initial size? What about (potential) unnecessary production until the buffer fills in?
     * Explicit signal from subscribers back to publishers. What should be the *unit of demand*? How does the signal propagate?
