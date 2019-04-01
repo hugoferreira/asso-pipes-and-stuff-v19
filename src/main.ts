@@ -1,7 +1,9 @@
-import { readFileSync, fstat } from 'fs'
+import { createReadStream } from 'fs'
+import { createInterface, Interface } from 'readline'
+const { once } = require('events');
 
 interface Filter {
-    next(): Message
+    next(): Promise<Message>
     hasNext(): Boolean
 }
 
@@ -28,8 +30,9 @@ class Message {
 
 class ToUpperCase implements Filter {
     constructor(public readonly f: Filter) { }
-    next(): Message {
-       return new Message(this.f.next().value.toUpperCase())
+    async next(): Promise<Message> {
+        const msg = await this.f.next()
+        return new Message(msg.value.toUpperCase())
     }
 
     hasNext(): Boolean {
@@ -39,8 +42,9 @@ class ToUpperCase implements Filter {
 
 class Writer implements Filter {
     constructor(public readonly f: Filter) { }
-    next(): Message {
-        console.log(this.f.next().value.toString())
+    async next(): Promise<Message> {
+        const msg = await this.f.next()
+        console.log(msg.value.toString())
         return Message.none
     }
 
@@ -50,17 +54,42 @@ class Writer implements Filter {
 }
 
 class FileLineReader implements Filter {
-    lines: string[]
+    lineReader: Interface
+    buffer: string[]
+    ended: Boolean
+
     constructor(public readonly fileName: string) {
-        this.lines = readFileSync(fileName, 'utf-8').split('\n')
+        this.lineReader = createInterface({
+            input: createReadStream(fileName)
+        })
+
+        this.buffer = []
+        this.ended = false
+
+        this.lineReader.on('line', (input) => {
+            this.buffer.push(input)
+        })
+        
+        this.lineReader.on('close', () => {
+            this.ended = true
+        })
+
     }
 
-    next(): Message {
-        return new Message(this.lines.shift())
+    async readSingleLine(): Promise<string> {
+        return await once(this.lineReader, 'line')
+    }
+
+    async next(): Promise<Message> {
+        if (this.buffer.length > 0) {
+            return new Message(this.buffer.shift())
+        } else {
+            const line = this.readSingleLine()
+        }
     }
 
     hasNext(): Boolean {
-        return this.lines.length > 0
+        return (this.buffer.length == 0) && this.ended
     }
 }
 
@@ -77,9 +106,9 @@ class SlowFileLineReader extends FileLineReader {
         } while (curDate.getTime() - date.getTime() < millis)
     }
 
-    next(): Message {
+    async next(): Promise<Message> {
         this.delay(2000)
-        return new Message(this.lines.shift())
+        return new Message(this.buffer.shift())
     }
 }
 
@@ -91,7 +120,7 @@ class Join implements Filter {
         this.fs = fs
     }
 
-    next(): Message {
+    async next(): Promise<Message> {
         const f = this.fs[this.currentFilter]
         this.currentFilter = (this.currentFilter + 1) % this.fs.length
         if (f.hasNext()) return f.next()
