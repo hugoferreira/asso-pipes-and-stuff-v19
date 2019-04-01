@@ -1,7 +1,7 @@
 
 export class AsyncQueue<T> {
-    subscriberQueue: Array<(v: T) => void>
-    publisherQueue: Array<T>
+    protected subscriberQueue: Array<(v: T) => void>
+    protected publisherQueue: Array<T>
 
     constructor() {
         this.publisherQueue = new Array<T>()
@@ -15,7 +15,6 @@ export class AsyncQueue<T> {
             this.publisherQueue.push(value)
         }
     }
-
 
     async pop(): Promise<T> {
         if(this.publisherQueue.length > 0) {
