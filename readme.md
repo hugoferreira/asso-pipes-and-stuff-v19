@@ -7,6 +7,8 @@ Refer to the class slides for more information.
 
 ## Part I (class of 25/3/2019)
 
+> In software engineering, a **pipeline** consists of a **chain of processing elements** (processes, threads, coroutines, functions, etc.), arranged so that the output of each element is the input of the next; the name is by analogy to a physical pipeline. Usually some amount of buffering is provided between consecutive elements. The **information that flows** in these pipelines is often a **stream** of records, bytes, or bits, and the elements of a pipeline may be called **filters**; this is also called the **pipes and filters design pattern**. Connecting elements into a pipeline is analogous to function composition.
+
 * *Pull* architecture, from the point of view of tasks (tasks *demand* data);
 * Synchronous and Blocking;
 * Eager instead of Lazy (see `FileLineReader`);
@@ -30,11 +32,9 @@ For those that were not paying attention (or feel lost):
 
 ## Part II (class of 1/4/2019)
 
-> In software architecture, publish–subscribe is a messaging pattern where senders of messages, called publishers, do not program the messages to be sent directly to specific receivers, called subscribers, but instead categorize published messages into classes without knowledge of which subscribers, if any, there may be. Similarly, subscribers express interest in one or more classes and only receive messages that are of interest, without knowledge of which publishers, if any, there are.
+> In software architecture, **publish–subscribe** is a **messaging pattern** where senders of messages, called publishers, do not program the messages to be sent directly to specific receivers, called subscribers, but instead categorize published messages into classes **without knowledge of which subscribers**, if any, there may be. Similarly, subscribers express interest in one or more classes and only receive messages that are of interest, without knowledge of which publishers, if any, there are. **Publish–subscribe is a sibling of the *message queue* paradigm, and is typically one part of a larger message-oriented middleware system.** This pattern provides greater network scalability and a more dynamic network topology, with a resulting decreased flexibility to modify the publisher and the structure of the published data.
 
-> Publish–subscribe is a sibling of the message queue paradigm, and is typically one part of a larger message-oriented middleware system. 
-
-> This pattern provides greater network scalability and a more dynamic network topology, with a resulting decreased flexibility to modify the publisher and the structure of the published data.
+Let's try to understand how we can get from where towards the above architectural pattern.
 
 ---
 
@@ -125,7 +125,16 @@ For those that were not paying attention (or feel lost):
 ### In Praise of Idleness ([Book](https://www.amazon.com/Praise-Idleness-Routledge-Classics-46/dp/0415325064))
 
 * By **eager** we mean that the publisher performs *work* independently from (a) existing subscribers or (b) having them willing to process messages;
+
 * By **lazy** we mean that the publisher only does the necessary amount of work to meet the subscriber *needs*.
+
+These are sometimes also called *hot* and *cold* Observables, as described [here](http://reactivex.io/documentation/operators/backpressure.html):
+
+* A **Cold Observable** emits a particular sequence of items, but can begin emitting this sequence when its observer finds it to be convenient, and at whatever rate the observer desires, without disrupting the integrity of the sequence.
+
+* A **Hot Observable** begins generating items to emit immediately when it is created. Such an Observable emits items at its own pace, and it is up to its observers to keep up. 
+
+Most existing frameworks avoid the problem of supporting both simultaneously, and stick to a single philosophy (which is a shame). Understanding these notions is key to understanding [backpressure](http://reactivex.io/documentation/operators/backpressure.html) mechanisms.
 
 ### A simple solution to cope with laziness
 
