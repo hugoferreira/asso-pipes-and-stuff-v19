@@ -44,7 +44,7 @@ class Writer implements Filter {
     constructor(public readonly f: Filter) { }
     async next(): Promise<Message> {
         const msg = await this.f.next()
-        console.log(msg.value.toString())
+        console.log('\n\n********* ' + msg.value.toString() + '***********\n\n')
         return Message.none
     }
 
@@ -68,24 +68,36 @@ class FileLineReader implements Filter {
 
         this.lineReader.on('line', (input) => {
             this.buffer.push(input)
+
+            console.log('\non LINE:')
+            console.log(input)
+            console.log(this.buffer)
+            console.log(this.ended)
         })
-        
+
         this.lineReader.on('close', () => {
             this.ended = true
+
+            console.log('\non CLOSE:')
+            console.log(this.buffer)
+            console.log(this.ended)
         })
 
     }
 
     async readSingleLine(): Promise<string> {
-        return await once(this.lineReader, 'line')
+        return once(this.lineReader, 'line')
     }
 
     async next(): Promise<Message> {
+        let line = ''
         if (this.buffer.length > 0) {
-            return new Message(this.buffer.shift())
+            line = this.buffer.shift()
         } else {
-            const line = this.readSingleLine()
+            line = await this.readSingleLine()
         }
+
+        return new Message(line)
     }
 
     hasNext(): Boolean {
@@ -132,15 +144,20 @@ class Join implements Filter {
     }
 }
 
-function iterate(f: Filter) {
-    while(f.hasNext()) { 
-        f.next()
-    }  
+async function iterate(f: Filter) {
+    while (f.hasNext()) {
+        await f.next()
+    }
 }
 
-const f1 = new SlowFileLineReader('./best15.txt')
-const f2 = new FileLineReader('./best-mieic.txt')
+// const f2 = new FileLineReader('./best-mieic.txt')
+// const f1 = new SlowFileLineReader('./best15.txt')
 
-const r1 = new Writer(new ToUpperCase(new Join(f1, f2)))
+// const r1 = new Writer(new ToUpperCase(new Join(f1, f2)))
 
-iterate(r1)
+const r1 = new Writer(new ToUpperCase(new FileLineReader('./best-mieic.txt')));
+
+(async () => {
+    let ret = await iterate(r1)
+    console.log(ret)
+})();
