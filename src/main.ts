@@ -1,7 +1,10 @@
 import { AsyncQueue } from './AsyncQueue'
 import { BoundedAsyncQueue } from './BoundedAsyncQueue'
+import { UnboundedQueue } from './UnboundedQueue'
 
 let queue = new BoundedAsyncQueue<string>(1);
+// let queue = new UnboundedQueue<string>();
+
 
 // 'some value'
 let cenas = queue.pop();
