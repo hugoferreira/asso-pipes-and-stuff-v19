@@ -149,6 +149,8 @@ Most existing frameworks avoid the problem of supporting both simultaneously, an
 
 ## Exercises
 
+> **Warning.** Asynchronous programming is hard for the human brain. Testing it is even harder. **Single-threaded asynchronous event-loop-based programming is... mental!** You'll make a lot of mistakes; that's normal and part of the learning process. But the web is built on top of javascript, so it's hard to run away from it.
+
 Attempt to replicate every scenario described above. If feeling lost, then try to proceed as follows:
 
 1. First ensure that if you're on javascript/node.js land, your "main entry" looks like this:
@@ -201,8 +203,6 @@ Attempt to replicate every scenario described above. If feeling lost, then try t
         | **Push** | [Promise](https://en.wikipedia.org/wiki/Futures_and_promises)  | [Observable](http://reactivex.io/documentation/observable.html) |
 
 1. Realize you've now built the basis for explicit pipes. Refactor the project to support them.
-
-> **Note.** Asynchronous programming is hard for the human brain. Testing it is even harder! You'll make a lot of mistakes... that's normal and part of the learning process. 
 
 ## General Notes on Pub/Sub Architectures
 
