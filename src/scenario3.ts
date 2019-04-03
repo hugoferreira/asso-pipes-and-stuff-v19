@@ -11,3 +11,7 @@ May use Heart Beat, Timeout and Circuit breaker patterns to deal with delivery f
 Manages message meta-information, such as marking them as tentatively consumed, until it has such guarantees (e.g., to avoids losing messages).
 
 */
+
+export function testScenarioThree() {
+    // TODO
+}

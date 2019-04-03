@@ -1,7 +1,8 @@
+import { Queue } from './queue/api'
 
-let queue = new BoundedAsyncQueue<string>(1);
+
+let queue = new Queue.BoundedAsyncQueue<string>(1);
 // let queue = new UnboundedQueue<string>();
-
 
 // 'some value'
 let cenas = queue.pop();

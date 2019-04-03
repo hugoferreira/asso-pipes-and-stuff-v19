@@ -13,3 +13,7 @@ No implicit connections between subscribers and producers:
 
 
 */
+
+export function testScenarioFour() {
+    // TODO
+}

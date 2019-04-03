@@ -7,3 +7,7 @@ Multiple subscribers:
 Implicit subscription (fetch from data structure).
 
 */
+
+export function testScenarioTwo() {
+    // TODO
+}

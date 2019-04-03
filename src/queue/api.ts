@@ -14,7 +14,7 @@ export namespace Queue {
     export const BoundedAsyncQueue = _BoundedAsyncQueue;
     export type BoundedAsyncQueue<T> = _BoundedAsyncQueue<T>;
 
-    export const UnboundedQueue = _UnboundedQueue;
-    export type UnboundedQueue<T> = _UnboundedQueue<T>;
+    export const UnboundedAsyncQueue = _UnboundedQueue;
+    export type UnboundedAsyncQueue<T> = _UnboundedQueue<T>;
 
 }
