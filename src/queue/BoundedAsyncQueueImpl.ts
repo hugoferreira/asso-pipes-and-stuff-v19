@@ -1,8 +1,9 @@
-import { AsyncSemaphore } from './AsyncSemaphore'
+import { AsyncSemaphore } from '../utils/AsyncSemaphore'
+import { BlockingQueue } from './BlockingQueue'
 
-// Thanks https://stackoverflow.com/questions/50382553/asynchronous-bounded-queue-in-js-ts-using-async-await
+// Based on https://stackoverflow.com/questions/50382553/asynchronous-bounded-queue-in-js-ts-using-async-await
 
-export class BoundedAsyncQueue<T> {
+export class BoundedAsyncQueue<T> implements BlockingQueue<T> {
     private queue = Array<T>()
     private waitingEnqueue: AsyncSemaphore
     private waitingDequeue: AsyncSemaphore

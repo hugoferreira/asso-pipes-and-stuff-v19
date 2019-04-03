@@ -1,5 +1,6 @@
+import { BlockingQueue } from './BlockingQueue'
 
-export class AsyncQueue<T> {
+export class AsyncQueue<T> implements BlockingQueue<T> {
     protected subscriberQueue: Array<(v: T) => void>
     protected publisherQueue: Array<T>
 
@@ -8,7 +9,7 @@ export class AsyncQueue<T> {
         this.subscriberQueue = new Array()
     }
 
-    async push(value: T) {
+    push(value: T) {
         if (this.subscriberQueue.length > 0) {
             this.subscriberQueue.shift()(value)
         } else {
