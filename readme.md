@@ -149,13 +149,44 @@ Most existing frameworks avoid the problem of supporting both simultaneously, an
 
 ## Exercises
 
+> **Warning.** Asynchronous programming is hard for the human brain. Testing it is even harder. **Single-threaded asynchronous event-loop-based programming is... mental!** You'll make a lot of mistakes; that's normal and part of the learning process. But the web is built on top of javascript, so it's hard to run away from it.
+
 Attempt to replicate every scenario described above. If feeling lost, then try to proceed as follows:
 
-1. Implement an `AsyncQueue`, i.e., an asynchronous unlimited [FIFO](https://en.wikipedia.org/wiki/Queue_(abstract_data_type));
+1. First ensure that if you're on javascript/node.js land, your "main entry" looks like this:
 
-1. Implement a `BoundedAsyncQueue`, i.e. an asynchronous bounded FIFO, that block `enqueuing()` when it's full, and blocks `dequeuing()` when it's empty;
+    ```
+    setInterval(() => { }, 1000); // run program until explicit exit
+    
+    (async () => {
+        // Do your stuff here
+        process.exit()
+    })()
+    ```
 
-1. Realize that the implementation of an `AsyncSemaphore` would make things easier, by studying the [producer-consumer problem](https://en.wikipedia.org/wiki/Producer–consumer_problem);
+    And yes, this is the time you throw in the towel and learn a proper language like [Scala](https://www.scala-lang.org).
+
+1. Implement an `AsyncQueue`, i.e., an asynchronous unlimited [FIFO](https://en.wikipedia.org/wiki/Queue_(abstract_data_type)). Start with the following public API:
+
+    ```
+    interface AsyncQueue<T> {
+        async enqueue(): Promise<void>
+        async dequeue(): Promise<T>
+    } 
+    ```
+
+    If you want to test your implementation, [you can use this code](https://gist.github.com/hugoferreira/91429f413761f62ec4020a3fe9744aeb) (run multiple times or put a loop there). Just plug in your `AsyncQueue`, and don't forget to `npm install is-array-sorted` as per the dependency.
+
+1. Realize that the implementation of an `AsyncSemaphore` would make things easier, by studying the [producer-consumer problem](https://en.wikipedia.org/wiki/Producer–consumer_problem):
+
+    ```
+    interface AsyncSemaphore {
+        signal(): void
+        async wait(): Promise<void>
+    }
+    ```
+
+1. Implement a `BoundedAsyncQueue`, i.e. an asynchronous bounded FIFO, that blocks `enqueuing()` when it's full, and blocks `dequeuing()` when it's empty. Design your own tests based on the aforementioned *gist*.
 
 1. **(To meditate)** What should be the semantics of a zero-length queue?
 
@@ -172,8 +203,6 @@ Attempt to replicate every scenario described above. If feeling lost, then try t
         | **Push** | [Promise](https://en.wikipedia.org/wiki/Futures_and_promises)  | [Observable](http://reactivex.io/documentation/observable.html) |
 
 1. Realize you've now built the basis for explicit pipes. Refactor the project to support them.
-
-> **Note.** Asynchronous programming is hard for the human brain. Testing it is even harder! You'll make a lot of mistakes... that's normal and part of the learning process. 
 
 ## General Notes on Pub/Sub Architectures
 
