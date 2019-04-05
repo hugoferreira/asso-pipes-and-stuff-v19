@@ -31,6 +31,7 @@ export function testScenarioThree() {
     const subscriberA = new Subscriber(1)
     const subscriberB = new Subscriber(2)
     const subscriberC = new Subscriber(3)
+    const subscriberD = new Subscriber(4)
 
     // Subscribing to the Ventilator
     ventilator.addObserver(subscriberA)
@@ -41,9 +42,10 @@ export function testScenarioThree() {
     (async () => {
         // await message
         // Notify all of our subscribers about the messages
-        ventilator.notifyObservers(queue.pop())
-        ventilator.notifyObservers(queue.pop())
+        ventilator.run(Date.now() + 5000, queue)
     })()
+
+    ventilator.addObserver(subscriberD)
 }
 
 testScenarioThree();
