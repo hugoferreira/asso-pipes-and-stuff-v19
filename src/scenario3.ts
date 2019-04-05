@@ -18,13 +18,14 @@ import { Publisher } from "./stuff/Publisher";
 
 export function testScenarioThree() {
 
-    let queue = new Queue.BoundedAsyncQueue<string>(1)
+    let queue = new Queue.BoundedAsyncQueue<string>(5)
 
     // Creating Ventilator
     const ventilator = new Ventilator()
 
     // Creating Publishers
     const publisher = new Publisher(1)
+    const publisher2 = new Publisher(2)
 
     // Creating Subscribers
     const subscriberA = new Subscriber(1)
@@ -41,6 +42,8 @@ export function testScenarioThree() {
         publisher.run(Date.now() + 5000, queue)
         // Notify all of our subscribers about the messages
         ventilator.run(Date.now() + 5000, queue)
+
+        publisher2.run(Date.now() + 5000, queue)
     })()
 
     ventilator.addObserver(subscriberD)

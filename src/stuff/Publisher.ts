@@ -9,7 +9,7 @@ export class Publisher<T> {
 
     }
 
-    generateMessage(): any {
+    generateMessage(): any { //TODO: Check livelock(?)
         delay(1000)
         return Math.floor(Math.random() * this.MAX_NUMBER_GENERATED)
     }
