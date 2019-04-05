@@ -13,7 +13,7 @@ Manages message meta-information, such as marking them as tentatively consumed, 
 */
 
 import {Queue} from "./queue/api";
-import {Subscriber, Ventilator} from './queue/Ventilator'
+import {Subscriber, Ventilator} from './stuff/Ventilator'
 
 export function testScenarioThree() {
 

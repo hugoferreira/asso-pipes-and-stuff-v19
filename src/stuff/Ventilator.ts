@@ -1,4 +1,4 @@
-import {Queue} from "./api";
+import {Queue} from "../queue/api";
 
 interface Observable<T> {
     sendRequest(message: T): void
