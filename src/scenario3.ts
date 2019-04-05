@@ -39,7 +39,7 @@ export function testScenarioThree() {
     ventilator.addObserver(subscriberC);
 
     (async () => {
-        publisher.run(Date.now() + 5000, queue)
+        setTimeout(() => publisher.run(Date.now() + 5000, queue), 100)
         // Notify all of our subscribers about the messages
         ventilator.run(Date.now() + 5000, queue)
 

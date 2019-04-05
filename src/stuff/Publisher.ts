@@ -1,5 +1,5 @@
 import {Queue} from "../queue/api";
-import { delay } from "../utils/utils";
+import { sleep } from "../utils/utils";
 
 
 export class Publisher<T> {
@@ -9,8 +9,8 @@ export class Publisher<T> {
 
     }
 
-    generateMessage(): any { //TODO: Check livelock(?)
-        delay(1000)
+    async generateMessage(): Promise<any> {
+        await sleep(1000)
         return Math.floor(Math.random() * this.MAX_NUMBER_GENERATED)
     }
 
@@ -20,7 +20,7 @@ export class Publisher<T> {
 
     async run(time: Number, queue: Queue.BlockingQueue<T>): Promise<void> {
         while (time > Date.now()) {
-            await this.publishMessage(queue, this.generateMessage())
+            await this.publishMessage(queue, await this.generateMessage())
         }
     }
 }
