@@ -12,6 +12,43 @@ Manages message meta-information, such as marking them as tentatively consumed, 
 
 */
 
+import {Queue} from "./queue/api";
+import { Ventilator} from './stuff/Ventilator'
+import { Publisher } from "./stuff/Publisher";
+import { Observable } from "./stuff/Subscriber";
+
 export function testScenarioThree() {
-    // TODO
+
+    let queue = new Queue.BoundedAsyncQueue<string>(5)
+
+    // Creating Ventilator
+    const ventilator = new Ventilator()
+
+    // Creating Publishers
+    const publisher = new Publisher(1)
+    const publisher2 = new Publisher(2)
+
+    // Creating Subscribers
+    const subscriberA = new Observable(1)
+    const subscriberB = new Observable(2)
+    const subscriberC = new Observable(3)
+    const subscriberD = new Observable(4)
+
+    // Subscribing to the Ventilator
+    subscriberA.subscribeVentilator(ventilator)
+    subscriberB.subscribeVentilator(ventilator)
+    subscriberC.subscribeVentilator(ventilator);
+
+    (async () => {
+        setTimeout(() => publisher.run(Date.now() + 5000, queue), 100)
+        // Notify all of our subscribers about the messages
+        ventilator.run(Date.now() + 5000, queue)
+
+        publisher2.run(Date.now() + 5000, queue)
+    })()
+
+    subscriberD.subscribeVentilator(ventilator)
+
 }
+
+testScenarioThree();
