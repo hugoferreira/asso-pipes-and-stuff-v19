@@ -1,8 +1,5 @@
-import {Queue} from "../queue/api";
-
-interface Observable<T> {
-    sendRequest(message: T): void
-}
+import { Queue } from '../queue/api';
+import { Observable } from './Subscriber';
 
 export class Ventilator<T> {
     private observables: Observable<T>[]
@@ -23,17 +20,5 @@ export class Ventilator<T> {
         while (time > Date.now()) {
             this.notifyObservers(await queue.pop());
         }
-    }
-}
-
-export class Subscriber<T> implements Observable<T> {
-    id: number
-
-    constructor(id: number) {
-        this.id = id
-    }
-
-    sendRequest(message: T): void {
-        console.log("Subscriber id " + this.id + " Received the message : " + message)
     }
 }
