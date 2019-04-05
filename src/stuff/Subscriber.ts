@@ -11,20 +11,20 @@ export abstract class Subscriber<T> {
 }
 
 export class SimpleSubscriber<T> extends Subscriber<T> {
-    constructor(id: number, public queue: Queue.BlockingQueue<T>) {
+    constructor(id: number) {
         super(id)
     }
 
-    async pullMessage(): Promise<T> {
-        const message =  await this.queue.pop()
+    async pullMessage(queue: Queue.BlockingQueue<T>): Promise<T> {
+        const message =  await queue.pop()
         this.logMessage(message)
 
         return message
     }
 
-    async run(time: Number): Promise<void> {
+    async run(time: Number, queue: Queue.BlockingQueue<T>): Promise<void> {
         while (time > Date.now()) {
-            await this.pullMessage()
+            await this.pullMessage(queue)
         }
     }
 }
