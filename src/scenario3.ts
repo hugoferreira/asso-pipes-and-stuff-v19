@@ -14,18 +14,17 @@ Manages message meta-information, such as marking them as tentatively consumed, 
 
 import {Queue} from "./queue/api";
 import {Subscriber, Ventilator} from './stuff/Ventilator'
+import { Publisher } from "./stuff/Publisher";
 
 export function testScenarioThree() {
 
+    let queue = new Queue.BoundedAsyncQueue<string>(1)
+
     // Creating Ventilator
-    let queue = new Queue.BoundedAsyncQueue<string>(1);
     const ventilator = new Ventilator()
 
-    //Publisher throwing messages
-    setTimeout(async function() {
-        await queue.push('first');
-        await queue.push('second');
-    }, 1000);
+    // Creating Publishers
+    const publisher = new Publisher(1)
 
     // Creating Subscribers
     const subscriberA = new Subscriber(1)
@@ -38,9 +37,8 @@ export function testScenarioThree() {
     ventilator.addObserver(subscriberB)
     ventilator.addObserver(subscriberC);
 
-
     (async () => {
-        // await message
+        publisher.run(Date.now() + 5000, queue)
         // Notify all of our subscribers about the messages
         ventilator.run(Date.now() + 5000, queue)
     })()
