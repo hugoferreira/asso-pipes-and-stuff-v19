@@ -16,8 +16,9 @@ export class Publisher<T> {
         await queue.push(message)
     }
 
-    async run(time: Number, queue: Queue.BlockingQueue<T>): Promise<void> {
-        while (time > Date.now()) {
+    async run(runTime: number, queue: Queue.BlockingQueue<T>): Promise<void> {
+        let start = Date.now()
+        while (start + runTime > Date.now()) {
             await this.publishMessage(queue, await this.generateMessage())
         }
     }

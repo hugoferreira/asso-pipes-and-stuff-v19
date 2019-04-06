@@ -17,9 +17,9 @@ export function testScenarioOne() {
     const subscriberA = new SimpleSubscriber(1);
 
     (async () => {
-        publisher.run(Date.now() + 5000, queue)
+        publisher.run(5000, queue)
 
-        setTimeout(() => subscriberA.run(Date.now() + 5000, queue), 100)
+        setTimeout(() => subscriberA.run(5000, queue), 100)
     })()
 }
 

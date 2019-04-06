@@ -22,14 +22,15 @@ export class SimpleSubscriber<T> extends Subscriber<T> {
         return message
     }
 
-    async run(time: Number, queue: Queue.BlockingQueue<T>): Promise<void> {
-        while (time > Date.now()) {
+    async run(runTime: number, queue: Queue.BlockingQueue<T>): Promise<void> {
+        let start = Date.now()
+        while (start + runTime > Date.now()) {
             await this.pullMessage(queue)
         }
     }
 }
 
-export class Observable<T> extends Subscriber<T> {
+export class Observer<T> extends Subscriber<T> {
     constructor(id: number) {
         super(id)
     }

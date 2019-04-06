@@ -1,23 +1,24 @@
 import { Queue } from '../queue/api';
-import { Observable } from './Subscriber';
+import { Observer } from './Subscriber';
 
 export class Ventilator<T> {
-    private observables: Observable<T>[]
+    private observers: Observer<T>[]
 
     constructor() {
-        this.observables = []
+        this.observers = []
     }
 
-    addObserver(ob: Observable<T>) {
-        this.observables.push(ob)
+    addObserver(ob: Observer<T>) {
+        this.observers.push(ob)
     }
 
     notifyObservers(message: T): void {
-        this.observables.map((observer) => observer.sendRequest(message))
+        this.observers.map((obs) => obs.sendRequest(message))
     }
 
-    async run(time: Number, queue: Queue.BlockingQueue<T>): Promise<void> {
-        while (time > Date.now()) {
+    async run(runTime: number, queue: Queue.BlockingQueue<T>): Promise<void> {
+        let start = Date.now()
+        while (start + runTime > Date.now()) {
             this.notifyObservers(await queue.pop());
         }
     }

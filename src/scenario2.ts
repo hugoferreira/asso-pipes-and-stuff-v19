@@ -21,12 +21,12 @@ export function testScenarioTwo() {
     const subscriberD = new SimpleSubscriber(4);
 
     (async () => {
-        publisher.run(Date.now() + 5000, queue)
+        publisher.run(5000, queue)
 
-        setTimeout(() => subscriberA.run(Date.now() + 5000, queue), 100)
-        setTimeout(() => subscriberB.run(Date.now() + 5000, queue), 300)
-        setTimeout(() => subscriberC.run(Date.now() + 5000, queue), 500)
-        subscriberD.run(Date.now() + 5000, queue)
+        setTimeout(() => subscriberA.run(5000, queue), 100)
+        setTimeout(() => subscriberB.run(5000, queue), 300)
+        setTimeout(() => subscriberC.run(5000, queue), 500)
+        subscriberD.run(5000, queue)
     })()
 }
 
