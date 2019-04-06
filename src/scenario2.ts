@@ -5,7 +5,7 @@ Multiple subscribers:
     Each gets a different message; (use AsyncSemaphore in AsyncQueue)
 Implicit subscription (fetch from data structure).
 */
-import { Queue } from './queue/api';
+import { Queue } from './queue';
 import { SimpleSubscriber, Publisher } from './stuff';
 
 export function testScenarioTwo() {

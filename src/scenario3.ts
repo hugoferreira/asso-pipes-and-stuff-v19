@@ -9,7 +9,7 @@ With steroids:
 May use Heart Beat, Timeout and Circuit breaker patterns to deal with delivery failures;
 Manages message meta-information, such as marking them as tentatively consumed, until it has such guarantees (e.g., to avoids losing messages).
 */
-import {Queue} from "./queue/api";
+import {Queue} from "./queue";
 import { Observer, Publisher, Ventilator} from './stuff'
 
 export function testScenarioThree() {

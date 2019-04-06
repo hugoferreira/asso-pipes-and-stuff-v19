@@ -1,4 +1,4 @@
-import { Queue } from './queue/api'
+import { Queue } from './queue'
 
 
 let queue = new Queue.BoundedQueue<string>(1);

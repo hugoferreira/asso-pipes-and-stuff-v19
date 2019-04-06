@@ -4,7 +4,7 @@ Publisher sends messages a.s.a.p.;
 Subscriber tries to pull messages and blocks (awaits) until it has one;
 Implicit subscription (fetch directly from data structure).
 */
-import { Queue } from './queue/api';
+import { Queue } from './queue';
 import { Publisher, SimpleSubscriber } from './stuff';
 
 export function testScenarioOne() {

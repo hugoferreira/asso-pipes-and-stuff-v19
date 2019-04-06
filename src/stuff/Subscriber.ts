@@ -1,4 +1,4 @@
-import { Queue } from '../queue/api';
+import { Queue } from '../queue';
 import { Ventilator } from './Ventilator';
 
 export abstract class Subscriber<T> {

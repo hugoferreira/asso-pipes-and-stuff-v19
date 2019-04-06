@@ -1,5 +1,5 @@
-import { Queue } from '../queue/api';
-import { sleep } from '../utils/utils';
+import { Queue } from '../queue';
+import { sleep } from '../utils';
 
 export class Publisher<T> {
     public MAX_NUMBER_GENERATED = 1e6
