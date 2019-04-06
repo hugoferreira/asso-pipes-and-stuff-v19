@@ -1,7 +1,7 @@
 import { BlockingQueue as _BlockingQueue } from './BlockingQueue'
-import { AsyncQueue as _AsyncQueue } from './AsyncQueueImpl'
-import { BoundedAsyncQueue as _BoundedAsyncQueue } from './BoundedAsyncQueueImpl'
-import { UnboundedQueue as _UnboundedQueue } from './UnboundedAsyncQueueImpl'
+import { AsyncQueue as _AsyncQueue } from './UnboundedAsyncQueue'
+import { UnboundedQueue as _UnboundedQueue } from './UnboundedAsyncQueue'
+import { BoundedQueue as _BoundedQueue } from './BoundedAsyncQueue'
 
 export namespace Queue {
 
@@ -11,10 +11,10 @@ export namespace Queue {
     export const AsyncQueue = _AsyncQueue;
     export type AsyncQueue<T> = _AsyncQueue<T>;
 
-    export const BoundedAsyncQueue = _BoundedAsyncQueue;
-    export type BoundedAsyncQueue<T> = _BoundedAsyncQueue<T>;
+    export const BoundedQueue = _BoundedQueue;
+    export type BoundedQueue<T> = _BoundedQueue<T>;
 
-    export const UnboundedAsyncQueue = _UnboundedQueue;
-    export type UnboundedAsyncQueue<T> = _UnboundedQueue<T>;
+    export const UnboundedQueue = _UnboundedQueue;
+    export type UnboundedQueue<T> = _UnboundedQueue<T>;
 
 }

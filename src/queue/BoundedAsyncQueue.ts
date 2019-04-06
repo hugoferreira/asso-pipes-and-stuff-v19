@@ -1,9 +1,21 @@
 import { AsyncSemaphore } from '../utils/AsyncSemaphore'
 import { BlockingQueue } from './BlockingQueue'
 
-// Based on https://stackoverflow.com/questions/50382553/asynchronous-bounded-queue-in-js-ts-using-async-await
-
+// Implementation _without_ Semaphore
 export class BoundedAsyncQueue<T> implements BlockingQueue<T> {
+    async push(val: T) {
+        throw new Error("Method not implemented.");
+    }
+    
+    async pop(): Promise<T> {
+        throw new Error("Method not implemented.");
+    }
+
+    
+}
+
+// Implementation _with_ Semaphore
+export class BoundedQueue<T> implements BlockingQueue<T> {
     private queue = Array<T>()
     private waitingEnqueue: AsyncSemaphore
     private waitingDequeue: AsyncSemaphore
@@ -19,7 +31,7 @@ export class BoundedAsyncQueue<T> implements BlockingQueue<T> {
         this.waitingEnqueue.signal()
     }
 
-    async pop() {
+    async pop(): Promise<T> {
         await this.waitingEnqueue.wait()
         this.waitingDequeue.signal()
         return this.queue.pop()!

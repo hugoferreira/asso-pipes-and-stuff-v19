@@ -1,7 +1,7 @@
 import { Queue } from './queue/api'
 
 
-let queue = new Queue.BoundedAsyncQueue<string>(1);
+let queue = new Queue.BoundedQueue<string>(1);
 // let queue = new UnboundedQueue<string>();
 
 // 'some value'

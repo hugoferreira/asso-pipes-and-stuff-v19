@@ -1,3 +1,4 @@
+// Based on https://stackoverflow.com/questions/50382553/asynchronous-bounded-queue-in-js-ts-using-async-await
 
 export class AsyncSemaphore {
     private promises = Array<() => void>()

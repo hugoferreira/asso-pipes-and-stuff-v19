@@ -14,7 +14,7 @@ import { Observable, Publisher, Ventilator} from './stuff'
 
 export function testScenarioThree() {
 
-    let queue = new Queue.BoundedAsyncQueue<string>(5)
+    let queue = new Queue.BoundedQueue<string>(5)
 
     // Creating Ventilator
     const ventilator = new Ventilator()
