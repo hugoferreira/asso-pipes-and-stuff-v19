@@ -20,8 +20,8 @@ export function testScenarioThree() {
     const ventilator = new Ventilator()
 
     // Creating Publishers
-    const publisher = new Publisher(1)
-    const publisher2 = new Publisher(2)
+    const publisher = new Publisher()
+    const publisher2 = new Publisher()
 
     // Creating Subscribers
     const subscriberA = new Observer(1)
@@ -30,9 +30,9 @@ export function testScenarioThree() {
     const subscriberD = new Observer(4)
 
     // Subscribing to the Ventilator
-    subscriberA.subscribeVentilator(ventilator)
-    subscriberB.subscribeVentilator(ventilator)
-    subscriberC.subscribeVentilator(ventilator);
+    ventilator.addObserver(subscriberA)
+    ventilator.addObserver(subscriberB)
+    ventilator.addObserver(subscriberC);
 
     (async () => {
         setTimeout(() => publisher.run(5000, queue), 100)
@@ -42,7 +42,7 @@ export function testScenarioThree() {
         publisher2.run(5000, queue)
     })()
 
-    subscriberD.subscribeVentilator(ventilator)
+    ventilator.addObserver(subscriberD);
 
 }
 

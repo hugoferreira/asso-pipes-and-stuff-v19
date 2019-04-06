@@ -12,7 +12,7 @@ export function testScenarioTwo() {
     let queue = new Queue.AsyncQueue<string>()
 
     // Creating Publishers
-    const publisher = new Publisher(1)
+    const publisher = new Publisher()
 
     // Creating Subscribers
     const subscriberA = new SimpleSubscriber(1)

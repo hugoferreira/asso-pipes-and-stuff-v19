@@ -2,7 +2,7 @@
 // Registry pattern
 // A well-known object that other objects can use to find common objects and services.
 export abstract class AbstractRegistry<K, T> {
-    private map: Map<K, T>
+    private map = new Map<K, T>()
 
     protected abstract generateKey(obj: T): K
 

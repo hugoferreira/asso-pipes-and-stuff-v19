@@ -1,5 +1,4 @@
 import { Queue } from '../queue';
-import { Ventilator } from './Ventilator';
 
 export abstract class Subscriber<T> {
     constructor(public id: number) {
@@ -33,10 +32,6 @@ export class SimpleSubscriber<T> extends Subscriber<T> {
 export class Observer<T> extends Subscriber<T> {
     constructor(id: number) {
         super(id)
-    }
-
-    subscribeVentilator(ventilator: Ventilator<T>) {
-        ventilator.addObserver(this)
     }
 
     sendRequest(message: T): void {

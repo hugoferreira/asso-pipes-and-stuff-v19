@@ -4,7 +4,7 @@ import { sleep } from '../utils';
 export class Publisher<T> {
     public MAX_NUMBER_GENERATED = 1e6
 
-    constructor(public id: number) {
+    constructor() {
     }
 
     async generateMessage(): Promise<any> {
