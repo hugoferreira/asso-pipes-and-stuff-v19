@@ -1,8 +1,6 @@
 import { Queue } from '../queue';
 import { Observer } from './Subscriber';
 
-
-
 // The Ventilator plays the role of an _Observable, to the subscriber _Observers_
 export class Ventilator<T> {
     private observers = Array<Observer<T>>()
