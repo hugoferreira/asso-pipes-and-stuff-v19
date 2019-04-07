@@ -15,6 +15,7 @@ export class SimpleSubscriber<T> extends Subscriber<T> {
     }
 
     async pullMessage(queue: Queue.BlockingQueue<T>): Promise<T> {
+        console.log("sou eu")
         const message =  await queue.pop()
         this.logMessage(message)
 

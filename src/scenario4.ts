@@ -31,7 +31,7 @@ export function testScenarioFour() {
     const subsC = new SimpleSubscriber<string>(3)
     const subsD = new SimpleSubscriber<string>(4)
 
-    // Manage subscriptions
+    // // Manage subscriptions
     broker.addSubscriber(subsA, keyA)
     broker.addSubscriber(subsA, keyB)
     broker.addSubscriber(subsB, keyB)

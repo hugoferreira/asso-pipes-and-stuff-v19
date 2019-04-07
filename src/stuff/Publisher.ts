@@ -13,7 +13,9 @@ export class Publisher<T> {
     }
 
     async publishMessage(queue: Queue.BlockingQueue<T>, message: T): Promise<void> {
+        console.log("oi")
         await queue.push(message)
+        console.log(message)
     }
 
     async run(runTime: number, queue: Queue.BlockingQueue<T>): Promise<void> {

@@ -25,26 +25,32 @@ export class Broker<T> {
 
     registAndRun(obj: Publisher<T> | SimpleSubscriber<T>) :number{
         let queue = new Queue.UnboundedQueue<T>()
-        const key = this.registry.register(queue)
-        obj.run(this.runTime, queue)
+        const key = this.registry.register(queue);
+        // (async () => {
+            obj.run(this.runTime, queue)
+        // })()
         return key
     }
 
-    movesMessages() { //isto vai merdar tanto omfg (aposto que este forEach vai cagar no async)
+    async movesMessages(): Promise<void> { //isto vai merdar tanto omfg (aposto que este forEach vai cagar no async)n  
         this.observers.forEach(async (subscribers, publisherKey) => {
+            // console.log(publisherKey)
             let publisherQueue = this.registry.get(publisherKey)
             const message = await publisherQueue.pop()
+            // console.log(message)
+
             subscribers.forEach((subscriberKey) => {
                 let subscriberQueue = this.registry.get(subscriberKey)
                 subscriberQueue.push(message)
             })
         });
+        return new Promise<void>((resolve)=>console.log("lol"))
     }
 
     async run(): Promise<void> {
         let start = Date.now()
         while (start + this.runTime > Date.now()) {
-            this.movesMessages()
+            await this.movesMessages()
         }
     }
 }
