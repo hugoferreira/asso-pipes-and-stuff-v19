@@ -11,7 +11,6 @@ No implicit connections between subscribers and producers:
     Study the Registry and (if you are feeling adventurous) the Service Locator patterns.
 */
 import { Broker, Publisher, SimpleSubscriber } from './stuff'
-import { Queue } from './queue'
 
 export function testScenarioFour() {
 

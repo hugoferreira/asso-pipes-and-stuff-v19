@@ -26,9 +26,7 @@ export class Broker<T> {
     registAndRun(obj: Publisher<T> | SimpleSubscriber<T>) :number{
         let queue = new Queue.UnboundedQueue<T>()
         const key = this.registry.register(queue);
-        (async () => {
-            obj.run(this.runTime, queue)
-        })()
+        obj.run(this.runTime, queue)
         return key
     }
 
