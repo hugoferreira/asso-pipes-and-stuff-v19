@@ -25,7 +25,9 @@ export class SimpleSubscriber<T> extends Subscriber<T> {
     async run(runTime: number, queue: Queue.BlockingQueue<T>): Promise<void> {
         let start = Date.now()
         while (start + runTime > Date.now()) {
+            // console.log("before")
             await this.pullMessage(queue)
+            // console.log("after")
         }
     }
 }
