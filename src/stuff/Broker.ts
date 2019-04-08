@@ -1,29 +1,54 @@
 import { Queue } from '../queue'
-import { Observer } from './Subscriber'
-import { Publisher } from './Publisher'
 import { Registry, DefaultDict } from '../utils'
+import { Publisher, SimpleSubscriber } from 'stuff';
 
 // Serves as a two-way ventilator
 export class Broker<T> {
-    private observers = new DefaultDict<number, Array<Observer<T>>>(() => new Array<Observer<T>>())
+    // Registry key(Publisher | Subscriber) -> queue
+    private registry = new Registry<Queue.BlockingQueue<T>>()
+    // publisherKey -> arraySubscriberKeys
+    private observers = new DefaultDict<number, Array<number>>(() => new Array<number>())
 
-    constructor(private registry: Registry<Publisher<T>>) {}
+    constructor(public runTime: number) {}
 
-    addSubscriber(obj: Observer<T>, publisherId: number) {
-        this.observers.get(publisherId).push(obj)
+    addPublisher(obj: Publisher<T>) : number{
+        const key = this.registAndRun(obj)
+        let subscriberKeys = Array<number>()
+        this.observers.set(key, subscriberKeys)
+        return key
     }
 
-    notifyObservers(message: T, fromPublisherId: number): void {
-        this.observers.get(fromPublisherId).forEach((observer) => observer.sendRequest(message))
+    addSubscriber(obj: SimpleSubscriber<T>, publisherId: number) :void {
+        const key = this.registAndRun(obj)
+        this.observers.get(publisherId).push(key)
     }
 
-    async run(runTime: number, publisherQueues: Array<[number, Queue.BlockingQueue<T>]>): Promise<void> {
-        let start = Date.now()
-        while (start + runTime > Date.now()) {
-            for (let [pubKey, queue] of publisherQueues) {
-                this.notifyObservers(await queue.pop(), pubKey)
-            }
+    registAndRun(obj: Publisher<T> | SimpleSubscriber<T>) :number{
+        let queue = new Queue.UnboundedQueue<T>()
+        const key = this.registry.register(queue);
+        (async () => {
+            obj.run(this.runTime, queue)
+        })()
+        return key
+    }
+
+    async movesMessages(): Promise<void> {  
+        for await(let publisherKey of this.observers.keys()) {
+            let publisherQueue = this.registry.get(publisherKey)
+            const message = await publisherQueue.pop()
+
+            const subscribers = this.observers.get(publisherKey)
+            subscribers.forEach((subscriberKey) => {
+                let subscriberQueue = this.registry.get(subscriberKey)
+                subscriberQueue.push(message)
+            }) 
         }
     }
 
+    async run(): Promise<void> {
+        let start = Date.now()
+        while (start + this.runTime > Date.now()) {
+            await this.movesMessages()
+        }
+    }
 }
