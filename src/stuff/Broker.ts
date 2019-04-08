@@ -32,34 +32,17 @@ export class Broker<T> {
         return key
     }
 
-    async movesMessages(): Promise<void> { //isto vai merdar tanto omfg (aposto que este forEach vai cagar no async)n  
-            console.log("movesMessage")
-   
-            let publisherQueue = this.registry.get(0)
-            console.log("1")
+    async movesMessages(): Promise<void> {  
+        for await(let publisherKey of this.observers.keys()) {
+            let publisherQueue = this.registry.get(publisherKey)
             const message = await publisherQueue.pop()
-            console.log("2")
-            let subscriberQueue = this.registry.get(3)
-            subscriberQueue.push(message)
-            console.log("3")
-            return ;
-        // this.observers.get(0).forEach((subscriberKey) => {
-        //         console.log(subscriberKey)
-        //         let subscriberQueue = this.registry.get(subscriberKey)
-        //         subscriberQueue.push(message)
-        // })
-        // this.observers.forEach(async (subscribers, publisherKey) => {
-        //     console.log(publisherKey)
-        //     let publisherQueue = this.registry.get(publisherKey)
-        //     const message = await publisherQueue.pop()
-        //     console.log(message)
 
-        //     subscribers.forEach((subscriberKey) => {
-        //         console.log(subscriberKey)
-        //         let subscriberQueue = this.registry.get(subscriberKey)
-        //         subscriberQueue.push(message)
-        //     })
-        // });
+            const subscribers = this.observers.get(publisherKey)
+            subscribers.forEach((subscriberKey) => {
+                let subscriberQueue = this.registry.get(subscriberKey)
+                subscriberQueue.push(message)
+            }) 
+        }
     }
 
     async run(): Promise<void> {
