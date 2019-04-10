@@ -170,7 +170,7 @@ Attempt to replicate every scenario described above. If feeling lost, then try t
 
     ```
     interface AsyncQueue<T> {
-        async enqueue(): Promise<void>
+        enqueue(): void
         async dequeue(): Promise<T>
     } 
     ```
@@ -186,7 +186,16 @@ Attempt to replicate every scenario described above. If feeling lost, then try t
     }
     ```
 
-1. Implement a `BoundedAsyncQueue`, i.e. an asynchronous bounded FIFO, that blocks `enqueuing()` when it's full, and blocks `dequeuing()` when it's empty. Design your own tests based on the aforementioned *gist*.
+1. Implement a `BoundedAsyncQueue`, i.e. an asynchronous bounded FIFO, that blocks `enqueuing()` when it's full, and blocks `dequeuing()` when it's empty. Design your own tests based on the aforementioned *gist*:
+
+    ```
+    interface BoundedAsyncQueue<T> {
+        async enqueue(): Promise<void>
+        async dequeue(): Promise<T>
+    } 
+    ```
+    
+    Realize that the `enqueue()` signature changed (*w.r.t.* `AsyncQueue`). Why?
 
 1. **(To meditate)** What should be the semantics of a zero-length queue?
 
