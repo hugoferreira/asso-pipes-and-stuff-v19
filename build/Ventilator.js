@@ -8,28 +8,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class Subscriber {
-    constructor(queue, processingTime) {
+class Ventilator {
+    constructor(queue) {
         this.queue = queue;
-        this.processingTime = processingTime;
-        this.id = Subscriber._id++;
+        this.subs = Array();
+    }
+    subscribe(sub) {
+        this.subs.push(sub);
     }
     pull() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.process(this.queue.dequeue());
+            return this.notifySubs(this.queue.dequeue());
         });
     }
-    process(task) {
+    notifySubs(task) {
         return __awaiter(this, void 0, void 0, function* () {
-            return new Promise(resolve => {
-                // simulates processing time
-                setTimeout(() => {
-                    resolve(task);
-                }, this.processingTime);
-            });
+            let tasks = new Array();
+            for (const sub of this.subs) {
+                tasks.push(sub.process(task));
+            }
+            return Promise.all(tasks);
         });
     }
 }
-Subscriber._id = 0;
-exports.Subscriber = Subscriber;
-//# sourceMappingURL=Subscriber.js.map
+exports.Ventilator = Ventilator;
+//# sourceMappingURL=Ventilator.js.map
