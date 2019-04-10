@@ -9,41 +9,72 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const AsyncQueue_1 = require("./AsyncQueue");
+const Publisher_1 = require("./Publisher");
+const Subscriber_1 = require("./Subscriber");
 const isArraySorted = require('is-array-sorted');
 setInterval(() => { }, 1000); // run program until explicit exit
 (() => __awaiter(this, void 0, void 0, function* () {
-    // Do your stuff here
-    console.log('memes');
-    const success = yield testAsyncQueueBehavior(100);
-    console.log(success);
+    console.log("EX1 -", (yield ex1Test(100)) ? "PASSED" : "FAILED");
+    console.log("EX2 -", (yield ex2Test(100, 3)) ? "PASSED" : "FAILED");
     process.exit();
 }))();
-function testAsyncQueueBehavior(nOps) {
+function ex1Test(nOps) {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = new Array();
-        const q = new AsyncQueue_1.AsyncQueue(10);
-        const enqueue = (m) => q.enqueue(m);
-        const dequeue = () => q.dequeue();
-        const promises = Array();
+        // Declare objects
+        const queue = new AsyncQueue_1.AsyncQueue(10);
+        const publisher = new Publisher_1.Publisher(queue);
+        const subscriber = new Subscriber_1.Subscriber(queue);
         let enqueues = 0;
         let dequeues = 0;
+        const result = new Array();
+        const promises = Array();
         // Do a random permutation of enqueing and dequeing
         for (let i = 0; i < nOps; i += 1) {
             if (Math.random() > 0.5) {
                 enqueues += 1;
-                // console.log(`${Date.now()} Enqueuing ${enqueues}`)
-                enqueue(enqueues);
+                publisher.push(enqueues);
             }
             else {
                 dequeues += 1;
-                // console.log(`${Date.now()} Dequeuing`)
-                promises.push(dequeue().then(v => { result.push(v); }));
+                promises.push(subscriber.pull().then(v => { result.push(v); }));
             }
         }
-        console.log(`Total enqueues ${enqueues}; dequeues ${dequeues}`);
         const pending = Math.min(enqueues, dequeues);
         yield Promise.all(promises.slice(0, pending));
-        console.log(result);
+        // Length should be equal minimum between enqueues and dequeues
+        const isLengthOk = pending === result.length;
+        // Messages should be ordered
+        const isSorted = isArraySorted(result);
+        return isLengthOk && isSorted;
+    });
+}
+function ex2Test(nOps, nSubscribers) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // Declare objects
+        const queue = new AsyncQueue_1.AsyncQueue(10);
+        const publisher = new Publisher_1.Publisher(queue);
+        const subscribers = new Array();
+        for (let i = 0; i < nSubscribers; i += 1)
+            subscribers.push(new Subscriber_1.Subscriber(queue));
+        let enqueues = 0;
+        let dequeues = 0;
+        let currentSubscriber = 0;
+        const result = new Array();
+        const promises = Array();
+        // Do a random permutation of enqueing and dequeing
+        for (let i = 0; i < nOps; i += 1) {
+            if (Math.random() > 0.5) {
+                enqueues += 1;
+                publisher.push(enqueues);
+            }
+            else {
+                dequeues += 1;
+                promises.push(subscribers[Math.floor(Math.random() * nSubscribers)].pull().then(v => { result.push(v); }));
+                // currentSubscriber < nSubscribers - 1 ? currentSubscriber += 1 : currentSubscriber = 0
+            }
+        }
+        const pending = Math.min(enqueues, dequeues);
+        yield Promise.all(promises.slice(0, pending));
         // Length should be equal minimum between enqueues and dequeues
         const isLengthOk = pending === result.length;
         // Messages should be ordered

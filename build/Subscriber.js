@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class Subscriver {
+class Subscriber {
     constructor(queue) {
         this.queue = queue;
     }
@@ -18,5 +18,5 @@ class Subscriver {
         });
     }
 }
-exports.Subscriver = Subscriver;
+exports.Subscriber = Subscriber;
 //# sourceMappingURL=Subscriber.js.map

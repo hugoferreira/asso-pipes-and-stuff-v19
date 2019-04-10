@@ -1,6 +1,6 @@
 import { AsyncQueue } from './AsyncQueue'
 
-export class Subscriver<T> {
+export class Subscriber<T> {
     constructor(public queue: AsyncQueue<T>) {}
 
     async pull(): Promise<T>{
