@@ -21,6 +21,10 @@
     "scripts": {
         "build": "tsc",
         "start": "tsc; node build/main.js",
+        "scenario1": "tsc; node build/scenario1.js",
+        "scenario2": "tsc; node build/scenario2.js",
+        "scenario3": "tsc; echo 'Build finished' && node build/scenario3.js",
+        "scenario4": "tsc; echo 'Build finished' && node build/scenario4.js",
         "asyncqueue": "tsc; node build/asyncqueue.js"
     }
 }
