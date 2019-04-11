@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 class Subscriber {
-    constructor(queue, processingTime) {
-        this.queue = queue;
+    constructor(processingTime, queue) {
         this.processingTime = processingTime;
         this.id = Subscriber._id++;
+        this.queue = queue;
     }
     pull() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -28,6 +28,9 @@ class Subscriber {
                 }, this.processingTime);
             });
         });
+    }
+    setQueue(queue) {
+        this.queue = queue;
     }
 }
 Subscriber._id = 0;

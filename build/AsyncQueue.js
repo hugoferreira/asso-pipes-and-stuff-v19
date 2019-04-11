@@ -31,6 +31,9 @@ class AsyncQueue {
             return this.queue.pop();
         });
     }
+    length() {
+        return this.queue.length;
+    }
 }
 exports.AsyncQueue = AsyncQueue;
 //# sourceMappingURL=AsyncQueue.js.map

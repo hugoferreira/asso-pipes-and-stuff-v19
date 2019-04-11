@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 class Publisher {
     constructor(queue) {
+        this.id = Publisher._id++;
         this.queue = queue;
     }
     push(message) {
@@ -17,6 +18,24 @@ class Publisher {
             this.queue.enqueue(message);
         });
     }
+    setQueue(queue) {
+        this.queue = queue;
+    }
 }
+Publisher._id = 0;
 exports.Publisher = Publisher;
+class BrokerPublisher extends Publisher {
+    constructor() {
+        super();
+    }
+    setBroker(broker) {
+        this.broker = broker;
+    }
+    push(message) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.broker.enqueue(this.id, message);
+        });
+    }
+}
+exports.BrokerPublisher = BrokerPublisher;
 //# sourceMappingURL=Publisher.js.map

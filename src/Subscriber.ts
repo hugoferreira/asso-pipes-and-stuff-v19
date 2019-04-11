@@ -1,11 +1,14 @@
 import { AsyncQueue } from './AsyncQueue'
+import { Broker } from './Broker'
 
 export class Subscriber<T> {
     static _id : number = 0
     public id: number
+    public queue: AsyncQueue<T>
 
-    constructor(public queue: AsyncQueue<T>, private processingTime: number) {
+    constructor(private processingTime: number, queue?: AsyncQueue<T>) {
         this.id = Subscriber._id++
+        this.queue = queue
     }
 
     async pull(): Promise<T> {
@@ -19,5 +22,9 @@ export class Subscriber<T> {
                 resolve(task)
             }, this.processingTime);
         })
+    }
+
+    setQueue(queue: AsyncQueue<T>) : void {
+        this.queue = queue
     }
 }

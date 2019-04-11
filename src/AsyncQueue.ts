@@ -23,4 +23,8 @@ export class AsyncQueue<T> {
         this.waitingDequeue.signal()
         return this.queue.pop()!
     }
+
+    length() : number {
+        return this.queue.length
+    }
 }
