@@ -1,13 +1,12 @@
 {
-    "name": "simple-draw-ts",
+    "name": "pipes-and-stuff",
     "version": "1.0.0",
-    "description": "Simple Draw TS",
+    "description": "Pipes and Stuff exercises",
     "author": "Sereno & JP",
     "license": "ISC",
     "@std/esm": "cjs",
     "main": "script.js",
     "dependencies": {
-        "@types/is-array-sorted": "^1.0.0",
         "is-array-sorted": "^1.0.0"
     },
     "devDependencies": {
