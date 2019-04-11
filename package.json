@@ -10,15 +10,16 @@
         "is-array-sorted": "^1.0.0"
     },
     "devDependencies": {
-        "@types/node": "^11.11.6",
+        "@types/node": "^11.13.0",
         "browserify": "^16.2.2",
         "npm": "^6.0.1",
         "opn-cli": "^4.0.0",
         "ts-node": "^8.0.3",
-        "typescript": "^3.3.3333"
+        "typescript": "^3.4.1"
     },
     "scripts": {
         "build": "tsc",
-        "start": "tsc; node build/main.js"
+        "start": "tsc; node build/main.js",
+        "asyncqueue": "tsc; node build/asyncqueue.js"
     }
 }
