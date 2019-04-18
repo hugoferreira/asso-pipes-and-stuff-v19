@@ -3,11 +3,15 @@ import { AsyncQueue } from '../AsyncQueue'
 import { Publisher } from '../entities/Publisher'
 import { Subscriber } from '../entities/Subscriber'
 
-export async function exercise1(nOps: number): Promise<Boolean> {
+export async function exercise2(nOps: number, nSubs: number): Promise<Boolean> {
     const result = new Array<number>()
-    const q = new AsyncQueue<number>(1)
+    const q = new AsyncQueue<number>(15)
     const publisher = new Publisher<number>(q)
-    const subscriber = new Subscriber<number>(250, q)
+    const subscribers = new Array<Subscriber<number>>()
+
+    for (let i = 0; i < nSubs; i++) {
+        subscribers.push(new Subscriber<number>(250, q))
+    }
 
     const promises = Array<Promise<void>>()
 
@@ -25,7 +29,8 @@ export async function exercise1(nOps: number): Promise<Boolean> {
             dequeues += 1
             // console.log(`${Date.now()} Dequeuing`)
             // promises.push(dequeue().then(v => { result.push(v) }))
-            promises.push(subscriber.pull().then(v => { result.push(v) }))
+            // promises.push(subscriber.pull().then(v => { result.push(v) }))
+            promises.push(subscribers[Math.floor(Math.random() * nSubs)].pull().then(v => { result.push(v) }))
         }
     }
 
