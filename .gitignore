@@ -1,2 +1,4 @@
 node_modules
 src/*.js
+src/exercises/*.js
+src/entities/*.js
