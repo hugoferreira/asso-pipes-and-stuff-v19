@@ -47,6 +47,8 @@ export class Broker<T> {
                 return this.notifySubscribers(await this.dequeue(subscriberKey))
             }
         }
+
+        return this.currSubscribers.values().next().value.pull()
     }
 
     notifySubscribers(notification: T): T {

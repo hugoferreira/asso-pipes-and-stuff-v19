@@ -47,11 +47,12 @@ export async function exercise4(nOps: number, nPubs: number, nSubs: number): Pro
             // promises.push(subscribers[Math.floor(Math.random() * nSubs)].pull().then(v => { result.push(v) }))
             // promises.push(ventilator.pull().then(v => { result.push(v)/*; console.log(result)*/ }))
             // promises.push(broker.moveMessage().then(v => { result.push(v) }))
-            promises.push(broker.pull().then(v => { result.push(v)/*; console.log(result)*/ }))
+            promises.push(broker.pull().then(v => { result.push(v)!/*; console.log(result)*/ }))
         }
     }
+    //console.log(result)
 
-    console.log(`Total enqueues ${enqueues}; dequeues ${dequeues}`)
+    //console.log(`Total enqueues ${enqueues}; dequeues ${dequeues}`)
     const pending = Math.min(enqueues, dequeues)
     await Promise.all(promises.slice(0, pending))
 
