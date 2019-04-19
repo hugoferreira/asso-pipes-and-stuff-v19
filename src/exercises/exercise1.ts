@@ -19,12 +19,10 @@ export async function exercise1(nOps: number): Promise<Boolean> {
         if (Math.random() > 0.5) {
             enqueues += 1
             // console.log(`${Date.now()} Enqueuing ${enqueues}`)
-            // enqueue(enqueues)
             publisher.push(enqueues)
         } else {
             dequeues += 1
             // console.log(`${Date.now()} Dequeuing`)
-            // promises.push(dequeue().then(v => { result.push(v) }))
             promises.push(subscriber.pull().then(v => { result.push(v) }))
         }
     }

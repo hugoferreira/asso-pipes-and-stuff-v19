@@ -12,10 +12,8 @@ export class Ventilator<T> {
 
     //Observer pattern
     notifySubscribers(notification: T): T {
-        //let taskArray = new Array<Promise<T>>();
         this.currSubscribers.map((sub) => sub.print(notification))
         return notification;
-        //return await Promise.all(taskArray)
     }
 
     addSubscriber(subscriber: Subscriber<T>) {
