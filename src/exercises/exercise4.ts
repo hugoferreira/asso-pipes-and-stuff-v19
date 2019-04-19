@@ -1,13 +1,30 @@
 const isArraySorted = require('is-array-sorted')
 import { AsyncQueue } from '../AsyncQueue'
-import { Publisher } from '../entities/Publisher'
-import { Subscriber } from '../entities/Subscriber'
+import { Publisher, BrokerPublisher } from '../entities/Publisher'
+import { Subscriber, BrokerSubscriber } from '../entities/Subscriber'
 import { Ventilator } from '../entities/Ventilator';
+import { Broker } from '../entities/Broker';
 
-export async function exercise3(nOps: number, nSubs: number): Promise<Boolean> {
+export async function exercise4(nOps: number, nPubs: number, nSubs: number): Promise<Boolean> {
     const result = new Array<number>()
     const q = new AsyncQueue<number>(50)
-    const publisher = new Publisher<number>(q)
+
+    const broker = new Broker<number>()
+
+    const publishers = new Array<BrokerPublisher<number>>()
+    for(let i = 0; i < nPubs; i++) {
+        let newPublisher = new BrokerPublisher<number>(i)
+        broker.addPublisher(newPublisher)
+        publishers.push(newPublisher)
+    }
+
+    const subscribers = new Array<BrokerSubscriber<number>>()
+    for(let i = 0; i < nSubs; i++) {
+        let newSubscriber = new BrokerSubscriber<number>(i, 250)
+        broker.addSubscriber(newSubscriber)
+        subscribers.push(newSubscriber)
+    }
+    /*const publisher = new Publisher<number>(q)
     const ventilator = new Ventilator<number>(q)
     const subscribers = new Array<Subscriber<number>>()
 
@@ -15,7 +32,7 @@ export async function exercise3(nOps: number, nSubs: number): Promise<Boolean> {
         let newSub: Subscriber<number> = new Subscriber<number>(250, q)
         ventilator.addSubscriber(newSub)
         subscribers.push(newSub)
-    }
+    }*/
 
     const promises = Array<Promise<void>>()
 
@@ -28,19 +45,22 @@ export async function exercise3(nOps: number, nSubs: number): Promise<Boolean> {
             enqueues += 1
             // console.log(`${Date.now()} Enqueuing ${enqueues}`)
             // enqueue(enqueues)
-            publisher.push(enqueues)
+            // publisher.push(enqueues)
+            publishers[Math.floor(Math.random() * nPubs)].push(enqueues)
         } else {
             dequeues += 1
             // console.log(`${Date.now()} Dequeuing`)
             // promises.push(dequeue().then(v => { result.push(v) }))
             // promises.push(subscriber.pull().then(v => { result.push(v) }))
             // promises.push(subscribers[Math.floor(Math.random() * nSubs)].pull().then(v => { result.push(v) }))
-            promises.push(ventilator.pull().then(v => { result.push(v)/*; console.log(result)*/ }))
+            // promises.push(ventilator.pull().then(v => { result.push(v)/*; console.log(result)*/ }))
+            // promises.push(broker.moveMessage().then(v => { result.push(v) }))
+            promises.push(broker.pull().then(v => { result.push(v)/*; console.log(result)*/ }))
         }
         //console.log(result)
     }
 
-    // console.log(`Total enqueues ${enqueues}; dequeues ${dequeues}`)
+     console.log(`Total enqueues ${enqueues}; dequeues ${dequeues}`)
     const pending = Math.min(enqueues, dequeues)
     await Promise.all(promises.slice(0, pending))
 

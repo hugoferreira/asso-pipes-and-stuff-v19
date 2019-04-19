@@ -1,7 +1,7 @@
 import { AsyncQueue } from "../AsyncQueue";
 
 export class Subscriber<T> {
-    private queue: AsyncQueue<T>
+    protected queue: AsyncQueue<T>
     private delay: number
 
     constructor(delay: number, queue: AsyncQueue<T>) {
@@ -27,4 +27,25 @@ export class Subscriber<T> {
         return msg;
     }
 
+}
+
+export class BrokerSubscriber<T> extends Subscriber<T> {
+    private id: number
+
+    constructor(id: number, delay: number) {
+        super(delay, undefined)
+        this.id = id;
+    }
+
+    setQueue(queue: AsyncQueue<T>) {
+        this.queue = queue
+    }
+
+    getQueue() {
+        return this.queue
+    }
+
+    public getID(): number {
+        return this.id
+    }
 }
