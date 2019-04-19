@@ -29,41 +29,27 @@ export class Broker<T> {
 
     async enqueue(publisherKey: number, task: T) {
         this.inboundQueues.get(publisherKey).enqueue(task)
-    }
-
-    async dequeue(subscriberKey: number) {
-        this.currSubscribers.get(subscriberKey).pull()
-    }
-
-    async pull() {
+        let message = await this.inboundQueues.get(publisherKey).dequeue()
         for(let subscriberKey of this.currSubscribers.keys()) {
-            if(this.currSubscribers.get(subscriberKey).getQueue().getQueue().length > 0) {
-                //return this.currSubscribers.get(subscriberKey).pull()
-                return this.notifySubscribers(await this.currSubscribers.get(subscriberKey).pull())
-            }
+            let subscriberQueue = this.outboundQueues.get(subscriberKey)
+            subscriberQueue.enqueue(message)
         }
-
-        //return this.currSubscribers.values().next().value.pull()
     }
 
-    /* async moveMessage() {
-        for await(let publisherKey of this.inboundQueues.keys()) {
-            let publisherQueue = this.inboundQueues.get(publisherKey)
-            let message = await publisherQueue.dequeue()
+    async dequeue(subscriberKey: number): Promise<T> {
+        return await this.currSubscribers.get(subscriberKey).pull()
+    }
 
-            for(let subscriberKey of this.currSubscribers.keys()) {
-                let subscriberQueue = this.outboundQueues.get(subscriberKey)
-                subscriberQueue.enqueue(message)
+    async pull(): Promise<T> {
+        for(let subscriberKey of this.currSubscribers.keys()) {
+            //console.log(this.currSubscribers.get(subscriberKey).getQueue().getQueue().length)
+            if(this.currSubscribers.get(subscriberKey).getQueue().getQueue().length > 0) {
+                return this.notifySubscribers(await this.dequeue(subscriberKey))
             }
         }
-    } */
+    }
 
     notifySubscribers(notification: T): T {
-        //let taskArray = new Array<Promise<T>>();
-        //this.currSubscribers.map((sub) => sub.print(notification))
-        //return notification;
-        //return await Promise.all(taskArray)
-
         for(let subscriberKey of this.currSubscribers.keys()) {
             this.currSubscribers.get(subscriberKey).print(notification)
         }

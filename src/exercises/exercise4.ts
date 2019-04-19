@@ -24,15 +24,6 @@ export async function exercise4(nOps: number, nPubs: number, nSubs: number): Pro
         broker.addSubscriber(newSubscriber)
         subscribers.push(newSubscriber)
     }
-    /*const publisher = new Publisher<number>(q)
-    const ventilator = new Ventilator<number>(q)
-    const subscribers = new Array<Subscriber<number>>()
-
-    for (let i = 0; i < nSubs; i++) {
-        let newSub: Subscriber<number> = new Subscriber<number>(250, q)
-        ventilator.addSubscriber(newSub)
-        subscribers.push(newSub)
-    }*/
 
     const promises = Array<Promise<void>>()
 
@@ -46,7 +37,8 @@ export async function exercise4(nOps: number, nPubs: number, nSubs: number): Pro
             // console.log(`${Date.now()} Enqueuing ${enqueues}`)
             // enqueue(enqueues)
             // publisher.push(enqueues)
-            publishers[Math.floor(Math.random() * nPubs)].push(enqueues)
+            // publishers[Math.floor(Math.random() * nPubs)].push(enqueues)
+            await broker.enqueue(Math.floor(Math.random() * nPubs), enqueues)
         } else {
             dequeues += 1
             // console.log(`${Date.now()} Dequeuing`)
@@ -57,10 +49,9 @@ export async function exercise4(nOps: number, nPubs: number, nSubs: number): Pro
             // promises.push(broker.moveMessage().then(v => { result.push(v) }))
             promises.push(broker.pull().then(v => { result.push(v)/*; console.log(result)*/ }))
         }
-        //console.log(result)
     }
 
-     console.log(`Total enqueues ${enqueues}; dequeues ${dequeues}`)
+    console.log(`Total enqueues ${enqueues}; dequeues ${dequeues}`)
     const pending = Math.min(enqueues, dequeues)
     await Promise.all(promises.slice(0, pending))
 
