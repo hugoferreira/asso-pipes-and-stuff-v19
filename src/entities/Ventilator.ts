@@ -11,17 +11,18 @@ export class Ventilator<T> {
     }
 
     //Observer pattern
-    async notifySubscribers(notification: Promise<T>) {
-        let taskArray = new Array<Promise<T>>();
-        this.currSubscribers.map((sub) => sub.process(notification))
-        return await Promise.all(taskArray)
+    notifySubscribers(notification: T): T {
+        //let taskArray = new Array<Promise<T>>();
+        this.currSubscribers.map((sub) => sub.print(notification))
+        return notification;
+        //return await Promise.all(taskArray)
     }
 
     addSubscriber(subscriber: Subscriber<T>) {
         this.currSubscribers.push(subscriber)
     }
 
-    async pull() {
-        return await this.notifySubscribers(this.queue.dequeue())
+    async pull(): Promise<T> {
+        return this.notifySubscribers(await this.queue.dequeue())
     }
 }

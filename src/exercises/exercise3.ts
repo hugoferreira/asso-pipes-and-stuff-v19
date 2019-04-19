@@ -35,12 +35,12 @@ export async function exercise3(nOps: number, nSubs: number): Promise<Boolean> {
             // promises.push(dequeue().then(v => { result.push(v) }))
             // promises.push(subscriber.pull().then(v => { result.push(v) }))
             // promises.push(subscribers[Math.floor(Math.random() * nSubs)].pull().then(v => { result.push(v) }))
-            promises.push(ventilator.pull().then(v => { result.push(v[Math.floor(Math.random() * nSubs)])/*; console.log(result)*/ }))
+            promises.push(ventilator.pull().then(v => { result.push(v)/*; console.log(result)*/ }))
         }
         //console.log(result)
     }
 
-    // console.log(`Total enqueues ${enqueues}; dequeues ${dequeues}`)
+     console.log(`Total enqueues ${enqueues}; dequeues ${dequeues}`)
     const pending = Math.min(enqueues, dequeues)
     await Promise.all(promises.slice(0, pending))
 

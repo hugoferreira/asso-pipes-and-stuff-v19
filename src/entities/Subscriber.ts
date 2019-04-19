@@ -22,4 +22,9 @@ export class Subscriber<T> {
         })
     }
 
+    print(msg: T): T{
+        // console.log(msg)
+        return msg;
+    }
+
 }
