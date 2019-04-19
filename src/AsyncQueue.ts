@@ -20,6 +20,12 @@ export class AsyncQueue<T> {
     async dequeue(): Promise<T> {
         await this.waitingEnqueue.wait()
         this.waitingDequeue.signal()
+        // Debug purposes: descomentar a linha debaixo e alterar a última linha da função para apenas 'return' se quisermos ver o conteúdo a sair por ordem
+        // console.log(this.queue.pop()!)
         return this.queue.pop()!
+    }
+
+    getQueue(): Array<T> {
+        return this.queue
     }
 }
